@@ -14,7 +14,7 @@ require AutoLoader;
 @EXPORT = qw(
 	
 );
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 bootstrap Tree::Ternary_XS $VERSION;
 

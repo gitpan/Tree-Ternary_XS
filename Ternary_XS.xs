@@ -2,6 +2,18 @@
 #include "perl.h"
 #include "XSUB.h"
 
+#ifndef PL_na 
+#define PL_na na 
+#endif
+
+#ifndef PL_dowarn
+#define PL_dowarn dowarn
+#endif
+
+#ifndef warn_uninit
+#define warn_uninit "Uninitialised variable"
+#endif
+
 #include "ternary.h"
 
 MODULE = Tree::Ternary_XS		PACKAGE = Tree::Ternary_XS		PREFIX= Ternary_
@@ -33,7 +45,7 @@ Ternary_DESTROY(t)
 
 	CODE:
 	Tobj *this;
-	this = (Tobj *)SvPV(SvRV(t), na);
+	this = (Tobj *)SvPV(SvRV(t), PL_na);
 	t_DESTROY(this);
 
 
@@ -51,10 +63,10 @@ Ternary_insert(t, w)
 	char *wp;
 
 	if (!SvOK(w)) {
-		if (dowarn) warn(warn_uninit);
+		if (PL_dowarn) warn(warn_uninit);
 		XSRETURN_UNDEF;
 	}
-	this = (Tobj *)SvPV(SvRV(t), na);
+	this = (Tobj *)SvPV(SvRV(t), PL_na);
 	wp = SvPV(w, wlen);
 
 	t_insert(this, wp);
@@ -73,11 +85,11 @@ Ternary_search(t, s)
 	char *sp;
 
 	if (!SvPOK(s)) { /* this used to be svOK(s) ? */
-		if (dowarn) warn(warn_uninit);
+		if (PL_dowarn) warn(warn_uninit);
 		XSRETURN_NO;
 	}
 
-	this = (Tobj *)SvPV(SvRV(t), na);
+	this = (Tobj *)SvPV(SvRV(t), PL_na);
 	sp = SvPV(s, slen);
 
 	RETVAL = t_search(this, sp);
@@ -95,7 +107,7 @@ Ternary_nodes(t)
 	CODE:
 	Tobj *this;
 
-	this = (Tobj *)SvPV(SvRV(t), na);
+	this = (Tobj *)SvPV(SvRV(t), PL_na);
 
 	RETVAL = t_nodes(this);
 
@@ -114,7 +126,7 @@ Ternary_terminals(t)
 	CODE:
 	Tobj *this;
 
-	this = (Tobj *)SvPV(SvRV(t), na);
+	this = (Tobj *)SvPV(SvRV(t), PL_na);
 
 	RETVAL = t_terminals(this);
 
@@ -143,16 +155,16 @@ Ternary_pmsearch(t, w, v)
 
 	PPCODE:
 	if (!SvPOK(v)) {
-		if (dowarn) warn(warn_uninit);
+		if (PL_dowarn) warn(warn_uninit);
 		XSRETURN_NO;
 	}
 
 	if (!SvPOK(w)) {
-		if (dowarn) warn(warn_uninit);
+		if (PL_dowarn) warn(warn_uninit);
 		XSRETURN_NO;
 	}
 
-	this = (Tobj *)SvPV(SvRV(t), na);
+	this = (Tobj *)SvPV(SvRV(t), PL_na);
 	vp = SvPV(v, vlen);
 	wp = SvPV(w, wlen);
 
@@ -186,7 +198,7 @@ Ternary_traverse(t)
 
 	PPCODE:
 
-	this = (Tobj *)SvPV(SvRV(t), na);
+	this = (Tobj *)SvPV(SvRV(t), PL_na);
 
 	t_traverse(this);
 
@@ -217,16 +229,16 @@ Ternary_nearsearch(t, n, w)
 
 	PPCODE:
 	if (!SvIOK(n)) {
-		if (dowarn) warn(warn_uninit);
+		if (PL_dowarn) warn(warn_uninit);
 		XSRETURN_NO;
 	}
 
 	if (!SvPOK(w)) {
-		if (dowarn) warn(warn_uninit);
+		if (PL_dowarn) warn(warn_uninit);
 		XSRETURN_NO;
 	}
 
-	this = (Tobj *)SvPV(SvRV(t), na);
+	this = (Tobj *)SvPV(SvRV(t), PL_na);
 	wp = SvPV(w, wlen);
 	realn = SvIV(n);
 

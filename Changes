@@ -1,5 +1,8 @@
 Revision history for Perl extension Tree::Ternary_XS.
 
+0.03  Tue Apr  4 22:44:51 2000
+        - bug fixes to be more Perl 5.6-compatible
+
 0.02  Sat Apr  1 20:15:03 2000
         - bug fixes for two of the tests - they still
           used Tree::Ternary
