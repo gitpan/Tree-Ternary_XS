@@ -2,17 +2,7 @@
 #include "perl.h"
 #include "XSUB.h"
 
-#ifndef PL_na 
-#define PL_na na 
-#endif
-
-#ifndef PL_dowarn
-#define PL_dowarn dowarn
-#endif
-
-#ifndef warn_uninit
-#define warn_uninit "Uninitialised variable"
-#endif
+#include "ppport.h"
 
 #include "ternary.h"
 
@@ -63,7 +53,7 @@ Ternary_insert(t, w)
 	char *wp;
 
 	if (!SvOK(w)) {
-		if (PL_dowarn) warn(warn_uninit);
+		if (PL_dowarn) warn("Parameter uninitialized!");
 		XSRETURN_UNDEF;
 	}
 	this = (Tobj *)SvPV(SvRV(t), PL_na);
@@ -73,26 +63,26 @@ Ternary_insert(t, w)
  
 
 int
-Ternary_search(t, s)
+Ternary_search(t, w)
 	SV * t
-	SV * s
+	SV * w
 
-	PROTOTYPE: $$$
+	PROTOTYPE: $$
 
 	CODE:
 	Tobj *this;
-	STRLEN slen;
-	char *sp;
+	STRLEN wlen;
+	char *wp;
 
-	if (!SvPOK(s)) { /* this used to be svOK(s) ? */
-		if (PL_dowarn) warn(warn_uninit);
+	if (!SvPOK(w)) { /* this used to be svOK(s) ? */
+		if (PL_dowarn) warn("Parameter uninitialized!");
 		XSRETURN_NO;
 	}
 
 	this = (Tobj *)SvPV(SvRV(t), PL_na);
-	sp = SvPV(s, slen);
+	wp = SvPV(w, wlen);
 
-	RETVAL = t_search(this, sp);
+	RETVAL = t_search(this, wp);
 
 	OUTPUT:
 		RETVAL
@@ -155,12 +145,12 @@ Ternary_pmsearch(t, w, v)
 
 	PPCODE:
 	if (!SvPOK(v)) {
-		if (PL_dowarn) warn(warn_uninit);
+		if (PL_dowarn) warn("Parameter uninitialized!");
 		XSRETURN_NO;
 	}
 
 	if (!SvPOK(w)) {
-		if (PL_dowarn) warn(warn_uninit);
+		if (PL_dowarn) warn("Parameter uninitialized!");
 		XSRETURN_NO;
 	}
 
@@ -229,12 +219,12 @@ Ternary_nearsearch(t, n, w)
 
 	PPCODE:
 	if (!SvIOK(n)) {
-		if (PL_dowarn) warn(warn_uninit);
+		if (PL_dowarn) warn("Parameter uninitialized!");
 		XSRETURN_NO;
 	}
 
 	if (!SvPOK(w)) {
-		if (PL_dowarn) warn(warn_uninit);
+		if (PL_dowarn) warn("Parameter uninitialized!");
 		XSRETURN_NO;
 	}
 
